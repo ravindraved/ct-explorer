@@ -11,6 +11,7 @@ go_api_server/internal/static/web_dist/*
 
 # Binaries
 bin/
+!bin/ct-explorer
 *.exe
 *.gz
 *.tar.gz

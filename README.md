@@ -69,12 +69,31 @@ All permissions are read-only. The app never modifies your AWS resources.
 
 ## Quick Start (EC2)
 
-### 1. Build
+### Option A: Pre-built Binary (no build tools needed)
+
+A pre-built binary for Amazon Linux (x86_64) is included in the repo. No Go, Node.js, or npm required.
 
 ```bash
 # Clone the repo
-git clone https://github.com/ravindraved/ct-explorer.git
-cd ct-explorer
+git clone https://github.com/ravindraved/aws-ct-controls-mapping.git
+cd aws-ct-controls-mapping
+
+# Run directly
+CT_AUTH_ENABLED=false ./bin/ct-explorer
+```
+
+The binary is statically linked and includes the embedded React frontend — just download and run.
+
+### Option B: Build from Source
+
+If you want to modify the code or rebuild the binary yourself, you'll need Go 1.25+ and Node.js 20+.
+
+#### 1. Build
+
+```bash
+# Clone the repo
+git clone https://github.com/ravindraved/aws-ct-controls-mapping.git
+cd aws-ct-controls-mapping
 
 # Build the frontend
 cd web
@@ -92,7 +111,7 @@ make build
 
 The binary is at `go_api_server/bin/ct-explorer-go`.
 
-### 2. Run
+#### 2. Run
 
 ```bash
 # Auth disabled (local/EC2 use — no Cognito needed)
