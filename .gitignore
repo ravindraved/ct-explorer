@@ -1,0 +1,37 @@
+# Dependencies
+web/node_modules/
+web/dist/
+
+# Go build artifacts
+go_api_server/bin/
+
+# Embedded frontend build (regenerated during build)
+go_api_server/internal/static/web_dist/*
+!go_api_server/internal/static/web_dist/.gitkeep
+
+# Binaries
+bin/
+*.exe
+*.gz
+*.tar.gz
+*.zip
+
+# Cache files
+*.gob
+cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+
+# Docs and markdown (kept in private repo only)
+*.md
+docs/
