@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"crypto"
 	"crypto/rsa"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -126,15 +128,22 @@ func validateJWT(tokenStr string) (*jwtPayload, error) {
 		return nil, fmt.Errorf("invalid issuer: %s", payload.Iss)
 	}
 
-	// Verify signature using JWKS (best-effort — load keys once)
+	// Verify signature using JWKS
 	jwksOnce.Do(loadJWKS)
 	if len(jwksKeys) > 0 {
 		pubKey, ok := jwksKeys[header.Kid]
 		if !ok {
 			return nil, fmt.Errorf("unknown signing key: %s", header.Kid)
 		}
-		_ = pubKey // Full RSA signature verification would use crypto/rsa.VerifyPKCS1v15
-		// For production, use a proper JWT library. This validates structure, expiry, and issuer.
+		sigBytes, err := base64.RawURLEncoding.DecodeString(parts[2])
+		if err != nil {
+			return nil, fmt.Errorf("invalid signature encoding")
+		}
+		signingInput := parts[0] + "." + parts[1]
+		digest := sha256.Sum256([]byte(signingInput))
+		if err := rsa.VerifyPKCS1v15(pubKey, crypto.SHA256, digest[:], sigBytes); err != nil {
+			return nil, fmt.Errorf("invalid token signature")
+		}
 	}
 
 	return &payload, nil
