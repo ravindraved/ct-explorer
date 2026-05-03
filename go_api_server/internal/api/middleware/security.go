@@ -98,6 +98,6 @@ func CORSOptions() cors.Options {
 	return cors.Options{
 		AllowedOrigins: strings.Split(origins, ","),
 		AllowedMethods: []string{"GET", "POST"},
-		AllowedHeaders: []string{"Content-Type"},
+		AllowedHeaders: []string{"Content-Type", "Authorization"},
 	}
 }

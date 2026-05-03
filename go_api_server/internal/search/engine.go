@@ -749,17 +749,15 @@ func (e *Engine) QuickQuery(preset string, page, pageSize int) (QuickQueryResult
 // ---------------------------------------------------------------------------
 
 func (e *Engine) unenabledCriticalControls() []FindResultItem {
-	enabledControlIDs := make(map[string]bool)
-	for _, c := range e.store.AllControls() {
-		enabledControlIDs[c.ControlID] = true
-	}
+	catalogControls := e.store.AllCatalogControls()
+	enabledOUMap := buildEnabledOUMap(catalogControls, e.store.AllControls())
 
 	items := make([]FindResultItem, 0)
-	for _, cc := range e.store.AllCatalogControls() {
+	for _, cc := range catalogControls {
 		if cc.Severity != models.SeverityCritical {
 			continue
 		}
-		if enabledControlIDs[cc.ARN] {
+		if _, ok := enabledOUMap[cc.ARN]; ok {
 			continue
 		}
 		items = append(items, FindResultItem{
